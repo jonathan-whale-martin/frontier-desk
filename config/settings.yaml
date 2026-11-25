@@ -3,6 +3,7 @@ site:
   tagline: AI news only. New models, the big labs, AI search, and practical ways to use AI at work.
   url: https://jonathan-whale-martin.github.io/frontier-desk        # your domain, no trailing slash
   contact_email: whalemartinj@gmail.com
+  owner: Jonathan Whale-Martin
   language: en-GB
 
 sections: [New models, OpenAI, Anthropic, Google, AI search, AI for business]
