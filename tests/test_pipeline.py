@@ -170,6 +170,8 @@ def test_build_site(tmp_repo, monkeypatch, tmp_path):
     assert "NewsArticle" in art and "Sources" in art and "How we use AI" in art
     assert (out / "section" / "new-models" / "index.html").exists()
     assert "<loc>" in (out / "sitemap.xml").read_text()
+    privacy = (out / "privacy" / "index.html").read_text()
+    assert "Buttondown" in privacy and "ico.org.uk" in privacy and "privacy/" in home
 
 
 def test_copied_text_is_rewritten_automatically(tmp_repo):
