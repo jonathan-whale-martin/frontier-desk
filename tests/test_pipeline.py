@@ -54,11 +54,11 @@ class FakeClient:
         self.draft, self.check = draft, check
         self.messages = self
 
-    def create(self, model, max_tokens, system, messages):
+    def create(self, model, max_tokens, system, messages, **kw):
         out = self.check if "fact-checker" in system else self.draft
         if callable(out):
             out = out(messages[0]["content"])
-        return SimpleNamespace(content=[SimpleNamespace(type="text", text=json.dumps(out))])
+        return SimpleNamespace(content=[SimpleNamespace(type="tool_use", input=out)], stop_reason="tool_use")
 
 
 GOOD_DRAFT = {
@@ -170,3 +170,36 @@ def test_build_site(tmp_repo, monkeypatch, tmp_path):
     assert "NewsArticle" in art and "Sources" in art and "How we use AI" in art
     assert (out / "section" / "new-models" / "index.html").exists()
     assert "<loc>" in (out / "sitemap.xml").read_text()
+
+
+def test_copied_text_is_rewritten_automatically(tmp_repo):
+    src = "Example Lab today released Nova 2, a model for software engineering tasks, priced at $3 per million input tokens."
+    copied = dict(GOOD_DRAFT, body=src)
+    calls = []
+
+    def draft(user):
+        calls.append(user)
+        return GOOD_DRAFT if "COPY TO REWRITE" in user else copied
+
+    res = run.run(items=sample_items()[:1], client=FakeClient(draft, PASS), read_text=lambda u, f: f)
+    assert res["saved"][0].parent == tmp_repo / "articles"
+    assert any("COPY TO REWRITE" in c for c in calls)
+
+
+def test_undated_page_is_baselined_first_time(tmp_repo):
+    page = fetch.parse_page('<a href="/news/old-post-from-last-year">An old announcement from last year</a>',
+                            {"name": "Lab", "url": "https://lab.example/news", "link_contains": "/news/", "weight": 3})
+    res = run.run(items=page, client=FakeClient(GOOD_DRAFT, PASS), read_text=lambda u, f: f)
+    assert res["saved"] == []  # old post not drafted
+    page2 = page + fetch.parse_page('<a href="/news/brand-new-model">Introducing a brand new model today</a>',
+                                    {"name": "Lab", "url": "https://lab.example/news", "link_contains": "/news/", "weight": 3})
+    res2 = run.run(items=page2, client=FakeClient(GOOD_DRAFT, PASS), read_text=lambda u, f: f)
+    assert len(res2["saved"]) == 1  # only the new link
+
+
+def test_text_reply_without_json_is_a_clear_error():
+    from pipeline import writer
+    bad = SimpleNamespace(messages=SimpleNamespace(create=lambda **k: SimpleNamespace(
+        content=[SimpleNamespace(type="text", text="Sorry")], stop_reason="end_turn")))
+    with pytest.raises(ValueError, match="no structured answer"):
+        writer._ask(bad, "m", "s", "u", {})
