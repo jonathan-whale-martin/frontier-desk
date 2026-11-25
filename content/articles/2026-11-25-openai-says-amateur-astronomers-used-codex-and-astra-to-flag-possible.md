@@ -7,7 +7,6 @@ summary: Two amateur astronomers used OpenAI's Codex and Astra tools to search p
   astronomers for checks.
 tags:
 - OpenAI
-- AI for business
 why_it_matters: It shows AI coding tools being used to plan and run large data searches,
   yet every candidate still needs expert confirmation before it can be called a discovery.
 sources:
