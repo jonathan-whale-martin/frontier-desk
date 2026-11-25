@@ -106,9 +106,11 @@ def build() -> int:
         write(f'news/{a["slug"]}/index.html',
               env.get_template("article.html").render(**base, root="../../", current=None, a=a))
     write("how-we-use-ai/index.html", env.get_template("policy.html").render(**base, root="../", current=None))
+    write("privacy/index.html", env.get_template("privacy.html").render(
+        **base, root="../", current=None, updated=cfg["site"].get("privacy_updated", "25 November 2026")))
 
     url = cfg["site"]["url"]
-    pages = ["/", "/how-we-use-ai/"] + [f'/section/{s["slug"]}/' for s in sections] + [f'/news/{a["slug"]}/' for a in arts]
+    pages = ["/", "/how-we-use-ai/", "/privacy/"] + [f'/section/{s["slug"]}/' for s in sections] + [f'/news/{a["slug"]}/' for a in arts]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "".join(f"<url><loc>{escape(url + p)}</loc></url>\n" for p in pages) + "</urlset>\n")
     items = "".join(
