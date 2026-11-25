@@ -26,8 +26,7 @@ Rules you must follow:
 - tags: choose from {sections}. Use "AI for business" only when there is a practical takeaway for businesses.
 - Set newsworthy to false if the item is not really AI news (for example an unrelated product, an event listing, a job post, or a page with no news in it).
 
-Reply with JSON only, in this shape:
-{{"newsworthy": true, "headline": "", "summary": "", "body": "", "why_it_matters": "", "tags": []}}"""
+Submit your answer with the submit tool."""
 
 CHECK_SYSTEM = """You are a fact-checker. Compare the DRAFT with the SOURCES.
 List every factual claim in the HEADLINE, SUMMARY and BODY (names, numbers, dates, what happened, who said what).
@@ -35,15 +34,13 @@ For each, decide if the sources clearly support it.
 A claim is unsupported if it is missing from the sources, goes further than they do, or states as fact something the sources only report as a rumour.
 The WHY IT MATTERS line is labelled analysis. Do not flag it for being an interpretation. Only flag it if it states a new fact (a name, number, date or event) that is not in the sources, or contradicts them.
 
-Reply with JSON only:
-{"claims": [{"claim": "", "supported": true, "note": ""}], "passed": true}
-Set passed to false if any claim is unsupported."""
+Submit your answer with the submit tool. Set passed to false if any claim is unsupported."""
 
 
 REWRITE_SYSTEM = """You rewrite news copy so it does not copy its sources.
 Keep every fact exactly the same and add nothing. Change the wording and sentence structure so that no more
 than 6 words in a row match the sources, apart from names and titles. British English.
-Reply with JSON only: {"headline": "", "summary": "", "body": "", "why_it_matters": ""}"""
+Submit your answer with the submit tool."""
 
 
 def _sources_block(story: dict, texts: dict[str, str]) -> str:
@@ -64,12 +61,34 @@ def _json(text: str) -> dict:
     return json.loads(m.group(0))
 
 
-def _ask(client, model: str, system: str, user: str, max_tokens: int = 1500) -> dict:
+def _ask(client, model: str, system: str, user: str, schema: dict, max_tokens: int = 3000) -> dict:
+    """Ask Claude and force a structured answer through a tool, so the reply is always valid JSON."""
     msg = client.messages.create(
         model=model, max_tokens=max_tokens, system=system,
         messages=[{"role": "user", "content": user}],
+        tools=[{"name": "submit", "description": "Submit your answer.", "input_schema": schema}],
+        tool_choice={"type": "tool", "name": "submit"},
     )
-    return _json("".join(b.text for b in msg.content if getattr(b, "type", "") == "text"))
+    for b in msg.content:
+        if getattr(b, "type", "") == "tool_use":
+            return b.input
+    text = "".join(getattr(b, "text", "") for b in msg.content)
+    try:
+        return _json(text)
+    except Exception:
+        raise ValueError(f"no structured answer (stop reason: {getattr(msg, 'stop_reason', '?')}): {text[:200]!r}")
+
+
+_S = {"type": "string"}
+DRAFT_SCHEMA = {"type": "object", "properties": {
+    "newsworthy": {"type": "boolean"}, "headline": _S, "summary": _S, "body": _S, "why_it_matters": _S,
+    "tags": {"type": "array", "items": _S}}, "required": ["newsworthy", "headline", "summary", "body", "why_it_matters", "tags"]}
+CHECK_SCHEMA = {"type": "object", "properties": {
+    "claims": {"type": "array", "items": {"type": "object", "properties": {
+        "claim": _S, "supported": {"type": "boolean"}, "note": _S}, "required": ["claim", "supported"]}},
+    "passed": {"type": "boolean"}}, "required": ["claims", "passed"]}
+REWRITE_SCHEMA = {"type": "object", "properties": {
+    "headline": _S, "summary": _S, "body": _S, "why_it_matters": _S}, "required": ["headline", "summary", "body", "why_it_matters"]}
 
 
 def draft_story(client, story: dict, texts: dict[str, str], settings: dict) -> dict | None:
@@ -80,7 +99,7 @@ def draft_story(client, story: dict, texts: dict[str, str], settings: dict) -> d
 
     d = _ask(client, p["model"],
              DRAFT_SYSTEM.format(site=settings["site"]["name"], sections=json.dumps(sections)),
-             f"SOURCES:\n\n{src}")
+             f"SOURCES:\n\n{src}", DRAFT_SCHEMA)
     if not d.get("newsworthy", True) or not d.get("headline") or not d.get("body"):
         log.info("Skipped (not newsworthy): %s", story["title"])
         return None
@@ -103,7 +122,8 @@ def draft_story(client, story: dict, texts: dict[str, str], settings: dict) -> d
     if longest_copied_run(joined(article), all_src) > MAX_COPIED_WORDS:
         try:
             r = _ask(client, p["model"], REWRITE_SYSTEM,
-                     f"SOURCES:\n\n{src}\n\nCOPY TO REWRITE:\n" + json.dumps({f: article[f] for f in fields}))
+                     f"SOURCES:\n\n{src}\n\nCOPY TO REWRITE:\n" + json.dumps({f: article[f] for f in fields}),
+                     REWRITE_SCHEMA)
             for f in fields:
                 if r.get(f) or f == "why_it_matters":
                     article[f] = (r.get(f) or "").strip()
@@ -118,7 +138,7 @@ def draft_story(client, story: dict, texts: dict[str, str], settings: dict) -> d
     # Second model pass: every claim must be in the sources.
     try:
         chk = _ask(client, p["check_model"], CHECK_SYSTEM,
-                   f"SOURCES:\n\n{src}\n\nDRAFT:\n{full}", max_tokens=2000)
+                   f"SOURCES:\n\n{src}\n\nDRAFT:\n{full}", CHECK_SCHEMA)
         bad = [c for c in chk.get("claims", []) if not c.get("supported", False)]
         for c in bad:
             article["problems"].append(f"Unsupported claim: {c.get('claim')} ({c.get('note', '')})".strip())

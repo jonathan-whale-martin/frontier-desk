@@ -11,7 +11,7 @@ import os
 import sys
 
 from . import choose, fetch, store, writer
-from .common import now, settings, sources
+from .common import now, read_json, settings, sources, write_json
 
 log = logging.getLogger("pipeline")
 
@@ -22,6 +22,15 @@ def run(items=None, client=None, dry_run=False, read_text=fetch.article_text) ->
     if items is None:
         items = fetch.collect(sources())
     seen = store.load_seen()
+    # Pages without dates (such as Anthropic's newsroom): the first time we read one, record what is
+    # already there as seen, so old posts are not drafted as news. After that, only new links count.
+    done = set(read_json(store.STATE / "baselined_pages.json", []))
+    fresh = {i["source"] for i in items if i.get("undated")} - done
+    if fresh:
+        seen.update(i["url"] for i in items if i.get("undated") and i["source"] in fresh)
+        write_json(store.STATE / "baselined_pages.json", sorted(done | fresh))
+        if not dry_run:
+            store.save_seen(seen)
     stories = choose.choose(items, seen_urls=seen, published_titles=store.published_titles(),
                             settings=cfg, now=t)
     log.info("%d stories chosen", len(stories))
