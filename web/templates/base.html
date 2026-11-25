@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="{{ site.language }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ site.name }}: AI news{% endblock %}</title>
+<meta name="description" content="{% block description %}{{ site.tagline }}{% endblock %}">
+<link rel="canonical" href="{{ site.url }}{% block path %}/{% endblock %}">
+<link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ root }}rss.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ root }}static/style.css">
+{% if m.adsense_client %}<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ m.adsense_client }}" crossorigin="anonymous"></script>{% endif %}
+{% block head %}{% endblock %}
+</head>
+<body>
+{% from "macros.html" import ad with context %}
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="{{ root }}">{{ site.name }}<span></span></a>
+    <div class="acts">
+      <a class="btn" href="{{ root }}#news" style="display:inline-flex;align-items:center;text-decoration:none">Newsletter</a>
+      <a class="btn solid" href="{{ root }}#join" style="display:inline-flex;align-items:center;text-decoration:none">Become a member</a>
+    </div>
+  </div>
+</header>
+<nav aria-label="Sections"><div class="wrap">
+  <a class="tab{% if not current %} on{% endif %}" href="{{ root }}">All</a>
+  {% for s in sections %}<a class="tab{% if current == s.name %} on{% endif %}" href="{{ root }}section/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}
+</div></nav>
+{% block main %}{% endblock %}
+<section class="member" id="join">
+  <div class="wrap">
+    <div>
+      <h2>Know what changed in AI, and what to do about it</h2>
+      <p>Members get unlimited articles and the weekly AI for business playbook. Readers get {{ m.membership.free_articles_per_month }} free articles a month.</p>
+    </div>
+    <div class="tiers">
+      <div class="tier"><h3>Reader</h3><div class="amt">£0</div><ul><li>{{ m.membership.free_articles_per_month }} articles a month</li><li>The daily AI brief</li><li>Standard ads</li></ul></div>
+      <div class="tier pick"><h3>Member</h3><div class="amt">{{ m.membership.member_price }}</div><ul><li>Unlimited articles</li><li>Fewer ads</li><li>Weekly AI for business playbook</li></ul><a class="btn" href="{{ m.membership.member_link or '#join' }}" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">Join</a></div>
+      <div class="tier"><h3>Pro</h3><div class="amt">{{ m.membership.pro_price }}</div><ul><li>Everything in Member</li><li>No ads</li><li>Full model tracker</li></ul><a class="btn" href="{{ m.membership.pro_link or '#join' }}" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none">Go Pro</a></div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="wrap">
+    <div><h3>{{ site.name }}</h3><p>{{ site.tagline }}</p></div>
+    <div><h3>Sections</h3><ul>{% for s in sections %}<li><a href="{{ root }}section/{{ s.slug }}/">{{ s.name }}</a></li>{% endfor %}</ul></div>
+    <div><h3>Standards</h3><ul><li><a href="{{ root }}how-we-use-ai/">How we use AI</a></li><li><a href="{{ root }}how-we-use-ai/#corrections">Corrections</a></li><li><a href="{{ root }}rss.xml">RSS feed</a></li><li>Contact: {{ site.contact_email }}</li></ul></div>
+  </div>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

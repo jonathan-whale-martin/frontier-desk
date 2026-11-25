@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{% if current %}{{ current }}: AI news | {{ site.name }}{% else %}{{ site.name }}: AI news{% endif %}{% endblock %}
+{% block path %}{{ path }}{% endblock %}
+{% block main %}
+{% from "macros.html" import ad with context %}
+<div class="wrap">
+  <div class="lb">{{ ad("leaderboard", "Top banner", "728 × 90") }}</div>
+  {% if lead %}
+  <section class="front">
+    <a class="lead" href="{{ root }}news/{{ lead.slug }}/">
+      <div class="fig">{{ lead.art_large|safe }}</div>
+      <div class="kicker" style="margin-top:14px">{{ lead.tags|join(" · ") }}</div>
+      <h1>{{ lead.title }}</h1>
+      <p>{{ lead.summary }}</p>
+      <div class="meta">{{ lead.date_label }} · Sources: {{ lead.source_names }}</div>
+    </a>
+    <div class="brief">
+      <h2>{% if current %}Latest in {{ current }}{% else %}This week in AI{% endif %}</h2>
+      <ol>{% for a in brief %}<li><time>{{ a.date_short }}</time><a href="{{ root }}news/{{ a.slug }}/">{{ a.title }}</a></li>{% endfor %}</ol>
+    </div>
+  </section>
+  {% endif %}
+  <div class="main">
+    <section>
+      <div class="sechead"><h2>{{ current or "Latest" }}</h2><span class="count">{{ rest|length }} {{ "story" if rest|length == 1 else "stories" }}</span></div>
+      <div class="grid">
+        {% for a in rest %}
+        <a class="card" href="{{ root }}news/{{ a.slug }}/">
+          <div class="thumb">{{ a.art_small|safe }}</div>
+          <span class="kicker">{{ a.tags|join(" · ") }}</span>
+          <h3>{{ a.title }}</h3>
+          <p>{{ a.summary }}</p>
+          <span class="meta">{{ a.date_label }} · {{ a.source_names }}</span>
+        </a>
+        {% if loop.index == 4 %}<div class="feedad">{{ ad("in_article", "In-feed ad", "native") }}</div>{% endif %}
+        {% else %}
+        <p>No stories here yet.</p>
+        {% endfor %}
+      </div>
+    </section>
+    {% include "sidebar.html" %}
+  </div>
+</div>
+{% endblock %}

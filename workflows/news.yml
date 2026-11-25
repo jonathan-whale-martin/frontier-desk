@@ -1,0 +1,63 @@
+# Every 3 hours: find new AI stories, draft them with Claude, and put them in a pull request for you to approve.
+name: News drafts
+
+on:
+  schedule:
+    - cron: "17 */3 * * *"      # minute 17 of every third hour (UTC)
+  workflow_dispatch: {}          # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: news-drafts
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Work on the drafts branch (keeps drafts you have not approved yet)
+        run: |
+          git config user.name "news-bot"
+          git config user.email "news-bot@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin drafts >/dev/null; then
+            git checkout -B drafts origin/drafts
+            git merge --no-edit origin/main || { git merge --abort; git checkout -B drafts origin/main; }
+          else
+            git checkout -b drafts
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Find and draft new stories
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m pipeline.run
+
+      - name: Save drafts and open or update the approval pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add content state
+          if git diff --cached --quiet; then
+            echo "No new drafts this run."
+            exit 0
+          fi
+          git commit -m "News drafts $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git push origin drafts
+          if [ -z "$(gh pr list --head drafts --state open --json number --jq '.[].number')" ]; then
+            gh pr create --base main --head drafts --title "AI news drafts to approve" --body-file state/last_report.md
+          else
+            gh pr comment drafts --body-file state/last_report.md
+          fi

@@ -1,0 +1,58 @@
+site:
+  name: Frontier Desk
+  tagline: AI news only. New models, the big labs, AI search, and practical ways to use AI at work.
+  url: https://www.example.com        # your domain, no trailing slash
+  contact_email: desk@example.com
+  language: en-GB
+
+sections: [New models, OpenAI, Anthropic, Google, AI search, AI for business]
+
+pipeline:
+  model: claude-sonnet-5-5            # model that drafts articles
+  check_model: claude-sonnet-5-5      # model that fact-checks each draft
+  lookback_hours: 48                  # ignore items older than this
+  max_drafts_per_run: 6               # most new drafts per run (keeps costs and review time down)
+  min_score: 2                        # skip weak stories (score = source weight + extra sources)
+  similar_title_threshold: 0.55       # how alike two headlines must be to count as the same story
+
+# Only items that match one of these are kept from feeds marked "filter: true".
+ai_keywords:
+  - AI
+  - artificial intelligence
+  - ChatGPT
+  - OpenAI
+  - Anthropic
+  - Claude
+  - Gemini
+  - AI Mode
+  - AI Overviews
+  - Copilot
+  - Perplexity
+  - LLM
+  - large language model
+  - generative
+  - chatbot
+  - agent
+  - GPT
+
+monetisation:
+  # Google AdSense publisher ID, e.g. ca-pub-1234567890123456. Leave empty to show placeholder boxes.
+  adsense_client: ""
+  # Ad unit slot IDs from your AdSense account (optional; leave empty for auto ads).
+  ad_slots:
+    leaderboard: ""
+    sidebar: ""
+    in_article: ""
+  # Newsletter signup form address from your email provider (Beehiiv, Buttondown, Mailchimp...).
+  newsletter_form_action: ""
+  newsletter_sponsor: ""              # e.g. "Today's brief is supported by Acme"
+  # Stripe Payment Links for memberships (create them in the Stripe dashboard).
+  membership:
+    free_articles_per_month: 5
+    member_price: "£5/month"
+    member_link: ""
+    pro_price: "£12/month"
+    pro_link: ""
+  # Affiliate tools box. Only list tools you have actually reviewed.
+  affiliate_tools: []
+  #  - {name: "Example note-taker", price: "£9/mo", url: "https://..."}

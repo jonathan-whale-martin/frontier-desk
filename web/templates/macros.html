@@ -1,0 +1,7 @@
+{% macro ad(kind, label, size) -%}
+{% if m.adsense_client %}
+<div><p class="adlabel">Advertisement</p><ins class="adsbygoogle" style="display:block" data-ad-client="{{ m.adsense_client }}"{% if m.ad_slots[kind] %} data-ad-slot="{{ m.ad_slots[kind] }}"{% endif %} data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>
+{% else %}
+<div class="ad {{ kind }}"><div><b>Advertisement · {{ size }}</b>{{ label }}</div></div>
+{% endif %}
+{%- endmacro %}

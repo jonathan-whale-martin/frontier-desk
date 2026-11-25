@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}How we use AI | {{ site.name }}{% endblock %}
+{% block path %}/how-we-use-ai/{% endblock %}
+{% block main %}
+<div class="wrap page prose">
+  <h1>How we use AI</h1>
+  <p>{{ site.name }} uses AI to help us cover AI news quickly. Here is exactly how.</p>
+  <p>Our system checks official company blogs and trusted news outlets several times a day. When it finds a new AI story, an AI model writes a short summary using only those sources. A second AI check compares every claim in the draft against the sources and flags anything it cannot find there.</p>
+  <p>A human editor then reads every draft before it is published. Drafts with problems are fixed or dropped. Nothing is published automatically.</p>
+  <p>Every article lists and links to its sources, so you can read the original reporting. We write summaries in our own words and do not copy other outlets' articles.</p>
+  <h2 id="corrections" style="margin-top:28px">Corrections</h2>
+  <p>If we get something wrong, we correct it and note the change at the bottom of the article. Email {{ site.contact_email }} to report a mistake.</p>
+  <h2 style="margin-top:28px">Advertising and affiliate links</h2>
+  <p>We show ads and some articles contain affiliate links, which earn us a commission if you buy. Sponsored content is always labelled. Advertisers never see articles before they are published and do not influence our coverage.</p>
+</div>
+{% endblock %}

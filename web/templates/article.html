@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ a.title }} | {{ site.name }}{% endblock %}
+{% block description %}{{ a.summary }}{% endblock %}
+{% block path %}/news/{{ a.slug }}/{% endblock %}
+{% block head %}
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ a.title }}">
+<meta property="og:description" content="{{ a.summary }}">
+<script type="application/ld+json">{{ a.jsonld|safe }}</script>
+{% endblock %}
+{% block main %}
+{% from "macros.html" import ad with context %}
+<div class="wrap">
+  <div class="lb">{{ ad("leaderboard", "Top banner", "728 × 90") }}</div>
+  <div class="main">
+    <article class="page" id="story" style="max-width:none;padding-top:0">
+      <div class="crumbs"><a href="{{ root }}">Home</a> · {% for t in a.tag_links %}<a href="{{ root }}section/{{ t.slug }}/">{{ t.name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</div>
+      <h1>{{ a.title }}</h1>
+      <div class="meta">{{ a.date_label }} · {{ a.read_mins }} min read</div>
+      <div class="fig" style="margin:18px 0">{{ a.art_large|safe }}</div>
+      <div class="prose">
+        {{ a.body_first|safe }}
+        <div class="inad" style="margin:0 0 18px">{{ ad("in_article", "In-article ad", "300 × 250") }}</div>
+        {{ a.body_rest|safe }}
+      </div>
+      {% if a.why_it_matters %}<p class="why"><b>Why it matters:</b> {{ a.why_it_matters }}</p>{% endif %}
+      <div class="wall"><div class="box" style="text-align:center">
+        <h2>You've read your free articles this month</h2>
+        <p>Become a member for {{ m.membership.member_price }} for unlimited AI news.</p>
+        <a class="btn solid" href="#join" style="display:inline-flex;align-items:center;text-decoration:none">See membership options</a>
+      </div></div>
+      <div class="src"><b>Sources</b>
+        <ul style="margin:6px 0 0;padding-left:18px">{% for s in a.sources %}<li><a href="{{ s.url }}" rel="noopener" target="_blank">{{ s.name }}: {{ s.title }}</a></li>{% endfor %}</ul>
+      </div>
+      <p class="disc">Drafted with AI from the sources listed above and checked by a human editor before publishing. <a href="{{ root }}how-we-use-ai/">How we use AI</a>. Spotted a mistake? Email {{ site.contact_email }}.</p>
+    </article>
+    {% include "sidebar.html" %}
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+{
+  const LIMIT={{ m.membership.free_articles_per_month|int }}, id="{{ a.slug }}";
+  try{
+    const k="fd_read_"+new Date().toISOString().slice(0,7);
+    const read=JSON.parse(localStorage.getItem(k)||"[]");
+    if(!read.includes(id))read.push(id);
+    localStorage.setItem(k,JSON.stringify(read));
+    if(read.indexOf(id)>=LIMIT&&!localStorage.getItem("fd_member"))document.getElementById("story").classList.add("locked");
+  }catch(e){}
+}
+</script>
+{% endblock %}

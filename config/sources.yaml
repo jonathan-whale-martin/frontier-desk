@@ -1,0 +1,53 @@
+# Where the pipeline looks for AI news.
+# weight: how much a story from this source counts when ranking (official sources count most).
+# filter: true means only keep items that mention AI (for general tech or search feeds).
+# Check each feed URL once in your browser before going live. Sites sometimes move their feeds.
+
+feeds:
+  # Official lab and company sources (primary sources)
+  - name: OpenAI
+    url: https://openai.com/news/rss.xml
+    weight: 3
+    tags: [OpenAI]
+  - name: Google AI blog
+    url: https://blog.google/technology/ai/rss/
+    weight: 3
+    tags: [Google]
+  - name: Google DeepMind
+    url: https://deepmind.google/blog/rss.xml
+    weight: 3
+    tags: [Google]
+  - name: Google Search Central blog
+    url: https://developers.google.com/search/blog/feeds/posts/default
+    weight: 3
+    tags: [Google, AI search]
+    filter: true
+
+  # AI search and SEO trade press
+  - name: Search Engine Roundtable
+    url: https://www.seroundtable.com/index.xml
+    weight: 2
+    tags: [AI search]
+    filter: true
+  - name: Search Engine Land
+    url: https://searchengineland.com/feed
+    weight: 2
+    tags: [AI search]
+    filter: true
+
+  # General AI coverage
+  - name: TechCrunch AI
+    url: https://techcrunch.com/category/artificial-intelligence/feed/
+    weight: 1
+  - name: The Verge AI
+    url: https://www.theverge.com/rss/ai-artificial-intelligence/index.xml
+    weight: 1
+
+# Pages without an RSS feed. The pipeline reads the page and picks up links whose
+# address contains link_contains. Anthropic does not publish an official RSS feed.
+pages:
+  - name: Anthropic
+    url: https://www.anthropic.com/news
+    link_contains: /news/
+    weight: 3
+    tags: [Anthropic]

@@ -1,0 +1,22 @@
+{% from "macros.html" import ad with context %}
+<aside>
+  <div class="mpu">{{ ad("sidebar", "Sidebar ad", "300 × 250") }}</div>
+  <div class="box" id="news">
+    <h2>The daily AI brief</h2>
+    <p>The AI stories that matter, in your inbox every weekday. Free.</p>
+    <form method="post" action="{{ m.newsletter_form_action or '#news' }}" target="_blank">
+      <label class="small" for="email">Email address</label>
+      <input id="email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
+      <button class="btn solid" type="submit">Sign me up</button>
+    </form>
+    {% if m.newsletter_sponsor %}<p class="small" style="margin-top:10px">{{ m.newsletter_sponsor }}</p>{% endif %}
+  </div>
+  {% if m.affiliate_tools %}
+  <div class="box tools">
+    <h2>AI tools we rate</h2>
+    <p>We may earn a commission if you sign up. It never affects our ratings.</p>
+    <ul>{% for t in m.affiliate_tools %}<li><a href="{{ t.url }}" rel="sponsored noopener" target="_blank">{{ t.name }}</a><span class="price">{{ t.price }}</span></li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  <div class="mpu">{{ ad("sidebar", "Half-page ad", "300 × 600") }}</div>
+</aside>
