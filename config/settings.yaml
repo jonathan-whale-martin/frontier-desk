@@ -1,8 +1,8 @@
 site:
   name: Frontier Desk
   tagline: AI news only. New models, the big labs, AI search, and practical ways to use AI at work.
-  url: https://www.example.com        # your domain, no trailing slash
-  contact_email: desk@example.com
+  url: https://jonathan-whale-martin.github.io/frontier-desk        # your domain, no trailing slash
+  contact_email: whalemartinj@gmail.com
   language: en-GB
 
 sections: [New models, OpenAI, Anthropic, Google, AI search, AI for business]
