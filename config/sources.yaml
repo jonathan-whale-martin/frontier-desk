@@ -17,24 +17,12 @@ feeds:
     url: https://deepmind.google/blog/rss.xml
     weight: 3
     tags: [Google]
-  - name: Google Search Central blog
-    url: https://developers.google.com/search/blog/feeds/posts/default
-    weight: 3
-    tags: [Google, AI search]
-    filter: true
-
   # AI search and SEO trade press
   - name: Search Engine Roundtable
     url: https://www.seroundtable.com/index.xml
     weight: 2
     tags: [AI search]
     filter: true
-  - name: Search Engine Land
-    url: https://searchengineland.com/feed
-    weight: 2
-    tags: [AI search]
-    filter: true
-
   # General AI coverage
   - name: TechCrunch AI
     url: https://techcrunch.com/category/artificial-intelligence/feed/
