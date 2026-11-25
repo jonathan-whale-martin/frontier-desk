@@ -9,7 +9,7 @@ from .common import longest_copied_run
 
 log = logging.getLogger(__name__)
 
-MAX_COPIED_WORDS = 12  # longest run of words allowed to match a source word-for-word
+MAX_COPIED_WORDS = 15  # longest run of words allowed to match a source word-for-word
 
 DRAFT_SYSTEM = """You are a news writer for {site}, a UK site that covers AI news only.
 You write short, accurate news summaries for busy professionals and business owners.
