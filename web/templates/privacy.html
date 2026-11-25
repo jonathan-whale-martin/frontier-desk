@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Privacy policy | {{ site.name }}{% endblock %}
+{% block path %}/privacy/{% endblock %}
+{% block main %}
+<div class="wrap page prose">
+  <h1>Privacy policy</h1>
+  <p class="meta">Last updated: {{ updated }}</p>
+
+  <p>This policy explains what personal information {{ site.name }} collects, why, and what your rights are. {{ site.name }} is run by {{ site.owner or site.name }}, which is the data controller for this site. Contact: {{ site.contact_email }}.</p>
+
+  <h2>What we collect and why</h2>
+  <p><b>Newsletter.</b> If you sign up, we collect your email address so we can send you the newsletter. We rely on your consent, and you can unsubscribe at any time using the link in every email. Our newsletter is sent by Buttondown, which stores the list for us.</p>
+  <p><b>Website visits.</b> Our site is hosted on GitHub Pages. Like any web host, GitHub records technical information such as your IP address when you visit, to keep the service running and secure. Our pages also load fonts from Google Fonts, which means your browser connects to Google's servers.</p>
+  <p><b>Article counter.</b> To count your free articles each month, the site stores a short list of the articles you have read in your own browser (local storage). It stays on your device and is not sent to us. You can clear it by clearing your browser data.</p>
+  {% if m.adsense_client %}
+  <p><b>Advertising.</b> We show ads through Google AdSense. Google and its partners may use cookies to show ads and measure them, and, where you agree, to personalise ads based on your visits to this and other sites. You can make or change your choices in the consent message shown on this site, and manage Google's ad personalisation at <a href="https://adssettings.google.com" rel="noopener" target="_blank">adssettings.google.com</a>. See how Google uses information from sites that use its services at <a href="https://policies.google.com/technologies/partner-sites" rel="noopener" target="_blank">policies.google.com/technologies/partner-sites</a>.</p>
+  {% endif %}
+  {% if m.membership.member_link or m.membership.pro_link %}
+  <p><b>Memberships.</b> If you buy a membership, payment is handled by Stripe. We receive your name, email address and payment status, but never your full card details. We use this to provide your membership, and we keep payment records as long as the law requires.</p>
+  {% endif %}
+  {% if m.affiliate_tools %}
+  <p><b>Affiliate links.</b> Some links to products are affiliate links. If you click one, the company may use a cookie to record that you came from us so we can earn a commission.</p>
+  {% endif %}
+
+  <h2>Who we share it with</h2>
+  <p>Only the services named above, which process information for us under their own privacy and security terms. Some of them are based in the United States, and they use legal safeguards approved under UK law for transfers outside the UK. We never sell your personal information.</p>
+
+  <h2>How long we keep it</h2>
+  <p>We keep your email address until you unsubscribe or ask us to delete it. Other information is kept only as long as it is needed for the purposes above.</p>
+
+  <h2>Your rights</h2>
+  <p>Under UK data protection law you can ask to see, correct or delete the personal information we hold about you, object to how we use it, or withdraw your consent at any time. Email {{ site.contact_email }}. If you are unhappy with how we handle your information, you can complain to the Information Commissioner's Office at <a href="https://ico.org.uk" rel="noopener" target="_blank">ico.org.uk</a>.</p>
+
+  <h2>Changes</h2>
+  <p>We will update this page when we add new services, such as advertising or memberships, and change the date at the top.</p>
+</div>
+{% endblock %}

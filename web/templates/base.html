@@ -47,7 +47,7 @@
   <div class="wrap">
     <div><h3>{{ site.name }}</h3><p>{{ site.tagline }}</p></div>
     <div><h3>Sections</h3><ul>{% for s in sections %}<li><a href="{{ root }}section/{{ s.slug }}/">{{ s.name }}</a></li>{% endfor %}</ul></div>
-    <div><h3>Standards</h3><ul><li><a href="{{ root }}how-we-use-ai/">How we use AI</a></li><li><a href="{{ root }}how-we-use-ai/#corrections">Corrections</a></li><li><a href="{{ root }}rss.xml">RSS feed</a></li><li>Contact: {{ site.contact_email }}</li></ul></div>
+    <div><h3>Standards</h3><ul><li><a href="{{ root }}how-we-use-ai/">How we use AI</a></li><li><a href="{{ root }}how-we-use-ai/#corrections">Corrections</a></li><li><a href="{{ root }}privacy/">Privacy policy</a></li><li><a href="{{ root }}rss.xml">RSS feed</a></li><li>Contact: {{ site.contact_email }}</li></ul></div>
   </div>
 </footer>
 {% block scripts %}{% endblock %}
