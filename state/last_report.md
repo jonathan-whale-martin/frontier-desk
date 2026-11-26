@@ -4,15 +4,8 @@ Read each draft below (Files changed tab). Edit anything that is wrong.
 **Merge this pull request to publish the drafts in `content/articles/`.**
 To reject a draft, delete its file in this pull request before merging.
 
-### Ready to publish (1)
-- **OpenAI says amateur astronomers used Codex and Astra to flag possible new exoplanets** (OpenAI, AI for business) — sources: [OpenAI](https://openai.com/index/searching-for-distant-planets-with-astra)
-
-### Needs a human fix (2)
-These are in `content/flagged/` and will NOT be published. Fix the problem, delete the `problems:` lines, and move the file to `content/articles/` to publish it.
-- **Google's Gemini named AI partner for Golden State Warriors and affiliated teams**
-  - 14 words in a row match a source word-for-word. Rewrite before publishing.
-- **OpenAI says its GPT-6 models can design proteins without specialised biology tools**
-  - 13 words in a row match a source word-for-word. Rewrite before publishing.
-
-### Skipped as not newsworthy (1)
-- How Intentful uses dots to make more time for growth
+### Ready to publish (4)
+- **ChatGPT Ads adds Business Agents outside the US and new audience metrics** (OpenAI, AI for business, AI search) — sources: [Search Engine Roundtable](https://www.seroundtable.com/chatgpt-ads-updates-42623.html)
+- **Google publishes document on how it selects and attributes links in AI Overviews and AI Mode** (AI search, Google, AI for business) — sources: [Search Engine Roundtable](https://www.seroundtable.com/google-ai-overviews-ai-mode-link-selection-42617.html)
+- **Google unveils Search ranking hub and clarifies Google-Extended AI training controls** (AI search, Google, AI for business) — sources: [Search Engine Roundtable](https://www.seroundtable.com/google-search-ranking-hub-42616.html)
+- **Bing tests standalone "AI-Generated answer" cards in search results** (AI search, AI for business) — sources: [Search Engine Roundtable](https://www.seroundtable.com/bing-ai-generated-answer-42598.html)
