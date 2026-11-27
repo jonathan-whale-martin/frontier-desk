@@ -4,8 +4,10 @@ Read each draft below (Files changed tab). Edit anything that is wrong.
 **Merge this pull request to publish the drafts in `content/articles/`.**
 To reject a draft, delete its file in this pull request before merging.
 
-### Ready to publish (4)
-- **Bing AI Mode ads now look less distinct from organic results, says Search Engine Roundtable** (AI search, AI for business) — sources: [Search Engine Roundtable](https://www.seroundtable.com/bing-ai-mode-ads-differentiate-42625.html)
-- **Google AI Mode adds follow-up questions on image results** (AI search, Google) — sources: [Search Engine Roundtable](https://www.seroundtable.com/google-ai-mode-images-ask-a-follow-up-42622.html)
-- **Google AI Mode now accepts up to 10 images in a single query** (AI search, Google) — sources: [Search Engine Roundtable](https://www.seroundtable.com/google-ai-mode-multiple-images-42620.html)
-- **Microsoft Copilot reportedly shows ads from Microsoft Advertising to some users** (AI search, AI for business) — sources: [Search Engine Roundtable](https://www.seroundtable.com/microsoft-advertising-ads-in-copilot-42629.html)
+### Ready to publish (3)
+- **Google's Create My Widget for Android lets users make AI-generated widgets** (Google, New models, AI for business) — sources: [The Verge AI](https://www.theverge.com/tech/1041801/android-intelligence-create-my-widget-gemini)
+- **Nvidia reportedly pauses server shipments to four Southeast Asian countries** (AI for business) — sources: [TechCrunch AI](https://techcrunch.com/2026/11/26/nvidia-hits-pause-on-chip-shipments-to-southeast-asia/)
+- **42 state AGs move to stop Character.AI selling users' chat histories** (AI for business) — sources: [The Verge AI](https://www.theverge.com/policy/1042620/character-ai-sale-state-ags-block-selling-users-chats)
+
+### Skipped as not newsworthy (1)
+- Grand Theft Auto VI proves why efficiency isn’t a virtue
