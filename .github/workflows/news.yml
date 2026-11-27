@@ -56,6 +56,10 @@ jobs:
           fi
           git commit -m "News drafts $(date -u +'%Y-%m-%d %H:%M') UTC"
           git push origin drafts
+          if git diff --quiet origin/main -- content; then
+            echo "No drafts to review yet."
+            exit 0
+          fi
           if [ -z "$(gh pr list --head drafts --state open --json number --jq '.[].number')" ]; then
             gh pr create --base main --head drafts --title "AI news drafts to approve" --body-file state/last_report.md
           else
