@@ -13,7 +13,7 @@ pipeline:
   check_model: claude-haiku-5-5       # model that fact-checks each draft
   lookback_hours: 48                  # ignore items older than this
   max_drafts_per_run: 4               # most new drafts per run (keeps costs and review time down)
-  min_score: 2                        # skip weak stories (score = source weight + extra sources)
+  min_score: 1                        # skip weak stories (score = source weight + extra sources)
   similar_title_threshold: 0.55       # how alike two headlines must be to count as the same story
 
 # Only items that match one of these are kept from feeds marked "filter: true".
