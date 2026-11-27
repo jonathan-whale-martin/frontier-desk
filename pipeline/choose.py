@@ -67,4 +67,16 @@ def choose(items: list[dict], *, seen_urls: set[str], published_titles: list[str
         })
     stories = [s for s in stories if s["score"] >= p["min_score"]]
     stories.sort(key=lambda s: (s["score"], s["published"]), reverse=True)
-    return stories[: p["max_drafts_per_run"]]
+
+    # Fair mix: at most `max_per_source` stories led by the same outlet in one run.
+    cap = p.get("max_per_source", 2)
+    picked, per_source = [], {}
+    for s in stories:
+        src = s["items"][0]["source"]
+        if per_source.get(src, 0) >= cap:
+            continue
+        per_source[src] = per_source.get(src, 0) + 1
+        picked.append(s)
+        if len(picked) == p["max_drafts_per_run"]:
+            break
+    return picked
